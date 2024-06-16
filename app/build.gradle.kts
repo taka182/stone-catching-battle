@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.stone_catching_battle"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.stone_catching_battle"
         minSdk = 27
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

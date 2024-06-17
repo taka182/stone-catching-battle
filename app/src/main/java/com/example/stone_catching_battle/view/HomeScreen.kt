@@ -44,7 +44,7 @@ fun HomeScreen(
                 value = selectedText,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("当てる数値を選択") },
+                label = { Text("数値を選択") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()

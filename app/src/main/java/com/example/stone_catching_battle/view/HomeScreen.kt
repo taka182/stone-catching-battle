@@ -1,99 +1,144 @@
 package com.example.stone_catching_battle.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.stone_catching_battle.PlayerOptions
+import com.example.stone_catching_battle.compose.ButtonItem
+import com.example.stone_catching_battle.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onStartGame: ()-> Unit = {}
+    homeViewModel: HomeViewModel = viewModel(),
+    onStartGame: (Int, Int) -> Unit = { _, _ -> }
 ) {
+    val playerCount by homeViewModel.playerCount.collectAsState()
+    val targetNumber by homeViewModel.targetNumber.collectAsState()
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("30") }
     val numbers = (30..100).toList()
 
-    var playerCount by remember { mutableStateOf(30) }
-    var selectedNumber by remember { mutableStateOf(30) }
-
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            text = "石取りゲーム",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // ゲームで使用する数値を設定
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedText,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("数値を選択") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+        item {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                numbers.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item.toString()) },
-                        onClick = {
-                            selectedText = item.toString()
-                            selectedNumber = item
-                            expanded = false
-                        }
-                    )
-                }
+                Text(
+                    text = "石取りゲームの説明",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "ルール：プレイヤーは順番に石を取ります。1ターンで取れる石の数は1〜3個です。指定した数値を取ったプレイヤーが負けです。",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "石取りゲーム",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
 
-        // プレイヤー数選択ボタン
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            for (i in 1..4) {
-                Button(
-                    onClick = { playerCount = i },
-                    enabled = playerCount != i,
-                    modifier = Modifier.weight(1f)
+                // ゲームで使用する数値を設定
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
                 ) {
-                    Text(text = "$i 人")
+                    TextField(
+                        value = targetNumber.toString(),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("数値を選択") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        numbers.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item.toString()) },
+                                onClick = {
+                                    homeViewModel.setTargetNumber(item)
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // プレイヤー数選択ボタン
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    PlayerOptions.values().filter { it.ordinal >= PlayerOptions.TWO.ordinal }.forEach { playerOptions  ->
+                        ButtonItem(
+                            text = "${playerOptions.count} 人",
+                            isSelected = playerCount == playerOptions.count,
+                            onClick = { homeViewModel.setPlayerCount(playerOptions.count) }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = { onStartGame(targetNumber, playerCount) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "ゲームスタート")
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // ゲームスタートボタン
-        Button(
-            onClick = { onStartGame() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "ゲームスタート")
         }
     }
 }

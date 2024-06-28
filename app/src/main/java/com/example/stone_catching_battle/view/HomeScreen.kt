@@ -14,8 +14,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.stone_catching_battle.PlayerOptions
-import com.example.stone_catching_battle.compose.ButtonItem
+import com.example.stone_catching_battle.util.PlayerOptions
+import com.example.stone_catching_battle.compose.SelectPlayerButtonItem
 import com.example.stone_catching_battle.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,10 +31,7 @@ fun HomeScreen(
 
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
     ) {
         item {
             Column(
@@ -42,7 +39,8 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
                 Text(
                     text = "石取りゲームの説明",
@@ -68,7 +66,6 @@ fun HomeScreen(
         item {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -89,11 +86,11 @@ fun HomeScreen(
                         value = targetNumber.toString(),
                         onValueChange = {},
                         readOnly = true,
+                        singleLine = true,
                         label = { Text("数値を選択") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor()
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true).fillMaxWidth()
                     )
 
                     ExposedDropdownMenu(
@@ -112,7 +109,7 @@ fun HomeScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(50.dp))
 
                 // プレイヤー数選択ボタン
                 Row(
@@ -121,16 +118,17 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerOptions.values().filter { it.ordinal >= PlayerOptions.TWO.ordinal }.forEach { playerOptions  ->
-                        ButtonItem(
-                            text = "${playerOptions.count} 人",
-                            isSelected = playerCount == playerOptions.count,
-                            onClick = { homeViewModel.setPlayerCount(playerOptions.count) }
-                        )
-                    }
+                    PlayerOptions.values().filter { it.ordinal >= PlayerOptions.TWO.ordinal }
+                        .forEach { playerOptions ->
+                            SelectPlayerButtonItem(
+                                text = "${playerOptions.count} 人",
+                                isSelected = playerCount == playerOptions.count,
+                                onClick = { homeViewModel.setPlayerCount(playerOptions.count) }
+                            )
+                        }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
                     onClick = { onStartGame(targetNumber, playerCount) },

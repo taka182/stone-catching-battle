@@ -3,9 +3,8 @@ package com.example.stone_catching_battle.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -20,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import com.example.stone_catching_battle.compose.CurrentPlayerTextItem
 import com.example.stone_catching_battle.viewmodel.GameViewModel
 
 @Composable
@@ -32,6 +31,7 @@ fun GameScreen(
     val gameTargetNumber by gameViewModel.gameTargetNumber.collectAsState()
     val gameCurrentNumber by gameViewModel.gameCurrentNumber.collectAsState()
     val currentPlayerIndex by gameViewModel.currentPlayerIndex.collectAsState()
+    val countUp by gameViewModel.countUp.collectAsState()
 
     LaunchedEffect(gameCurrentNumber) {
         if (gameTargetNumber == gameCurrentNumber) {
@@ -67,17 +67,12 @@ fun GameScreen(
         }
 
         items(gamePlayerCount) { i ->
-            Text(
-                text = if (i == currentPlayerIndex) "プレイヤー ${i + 1}(現在のプレイヤー)" else "プレイヤー ${i + 1}",
-                fontSize = 18.sp,
-                fontWeight = if (i == currentPlayerIndex) FontWeight.Bold else FontWeight.Normal,
-                modifier = Modifier
-                    .padding(bottom = 12.dp)
-                    .background(
-                        color = if (i == currentPlayerIndex) Color(0xFFD3D3D3) else Color.Transparent,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(8.dp)
+            val isCurrentPlayer = i == currentPlayerIndex
+            CurrentPlayerTextItem(
+                text = if (isCurrentPlayer) "プレイヤー ${i + 1}(現在のプレイヤー)" else "プレイヤー ${i + 1}",
+                fontSize = 20.sp,
+                fontWeight = if (isCurrentPlayer) FontWeight.Bold else FontWeight.Normal,
+                isCurrentPlayer = isCurrentPlayer
             )
         }
 
@@ -106,9 +101,9 @@ fun GameScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp),
-                enabled = gameViewModel.countUp.value > 0
+                enabled = countUp > 0
             ) {
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "次のプレイヤーへ")
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "次のプレイヤーへ")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "次のプレイヤーへ")
             }

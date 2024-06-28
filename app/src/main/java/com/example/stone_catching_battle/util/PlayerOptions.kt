@@ -1,4 +1,4 @@
-package com.example.stone_catching_battle
+package com.example.stone_catching_battle.util
 
 enum class PlayerOptions(val count: Int) {
     ONE(1),

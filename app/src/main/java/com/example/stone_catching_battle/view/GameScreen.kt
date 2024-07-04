@@ -15,11 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stone_catching_battle.compose.CurrentPlayerTextItem
+import com.example.stone_catching_battle.ui.theme.firstPlayerBackColor
+import com.example.stone_catching_battle.ui.theme.fourthPlayerBackColor
+import com.example.stone_catching_battle.ui.theme.secondPlayerBackColor
+import com.example.stone_catching_battle.ui.theme.thirdPlayerBackColor
 import com.example.stone_catching_battle.viewmodel.GameViewModel
 
 @Composable
@@ -33,6 +36,13 @@ fun GameScreen(
     val currentPlayerIndex by gameViewModel.currentPlayerIndex.collectAsState()
     val countUp by gameViewModel.countUp.collectAsState()
 
+    val playerColors = listOf(
+        firstPlayerBackColor,
+        secondPlayerBackColor,
+        thirdPlayerBackColor,
+        fourthPlayerBackColor
+    )
+
     LaunchedEffect(gameCurrentNumber) {
         if (gameTargetNumber == gameCurrentNumber) {
             onLose()
@@ -43,8 +53,7 @@ fun GameScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .background(Color(0xFFEFEFEF)),
+            .background(playerColors[currentPlayerIndex]),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -66,10 +75,10 @@ fun GameScreen(
             )
         }
 
-        items(gamePlayerCount) { i ->
-            val isCurrentPlayer = i == currentPlayerIndex
+        items(gamePlayerCount) {
+            val isCurrentPlayer = it == currentPlayerIndex
             CurrentPlayerTextItem(
-                text = if (isCurrentPlayer) "プレイヤー ${i + 1}(現在のプレイヤー)" else "プレイヤー ${i + 1}",
+                text = if (isCurrentPlayer) "プレイヤー ${it + 1}(現在のプレイヤー)" else "プレイヤー ${it + 1}",
                 fontSize = 20.sp,
                 fontWeight = if (isCurrentPlayer) FontWeight.Bold else FontWeight.Normal,
                 isCurrentPlayer = isCurrentPlayer
@@ -103,7 +112,10 @@ fun GameScreen(
                     .padding(vertical = 12.dp),
                 enabled = countUp > 0
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "次のプレイヤーへ")
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "次のプレイヤーへ"
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "次のプレイヤーへ")
             }

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">stone_catching_battle</string>
+    <string name="start_game_button_text">ゲームスタート</string>
+    <string name="rule_text">ルール：プレイヤーは順番に石を取ります。1ターンで取れる石の数は1〜3個です。指定した数値を取ったプレイヤーが負けです。</string>
+    <string name="rule_title_text">石取りゲームの説明</string>
+    <string name="game_title_text">石取りゲーム</string>
+    <string name="select_numerical_value_text">数値を選択</string>
+    <string name="next_player_text">次のプレイヤーへ</string>
+    <string name="one_up_text">1UP</string>
+    <string name="current_number_text">現在の数値</string>
 </resources>

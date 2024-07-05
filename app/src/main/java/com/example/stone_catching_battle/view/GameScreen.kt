@@ -15,9 +15,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.stone_catching_battle.R
 import com.example.stone_catching_battle.compose.CurrentPlayerTextItem
 import com.example.stone_catching_battle.ui.theme.firstPlayerBackColor
 import com.example.stone_catching_battle.ui.theme.fourthPlayerBackColor
@@ -68,7 +71,7 @@ fun GameScreen(
 
         item {
             Text(
-                text = "現在の数値: $gameCurrentNumber",
+                text = stringResource(R.string.current_number_text) + "$gameCurrentNumber",
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Normal,
                 modifier = Modifier.padding(bottom = 24.dp)
@@ -96,9 +99,12 @@ fun GameScreen(
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
             ) {
-                Icon(imageVector = Icons.Default.ArrowUpward, contentDescription = "1UP")
+                Icon(
+                    imageVector = Icons.Default.ArrowUpward,
+                    contentDescription = stringResource(R.string.one_up_text)
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "1UP")
+                Text(text = stringResource(R.string.one_up_text))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -114,10 +120,10 @@ fun GameScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "次のプレイヤーへ"
+                    contentDescription = stringResource(R.string.next_player_text)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "次のプレイヤーへ")
+                Text(text = stringResource(R.string.next_player_text))
             }
         }
     }

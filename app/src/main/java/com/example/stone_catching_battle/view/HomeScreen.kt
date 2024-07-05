@@ -9,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.stone_catching_battle.R
 import com.example.stone_catching_battle.util.PlayerOptions
 import com.example.stone_catching_battle.compose.SelectPlayerButtonItem
 import com.example.stone_catching_battle.viewmodel.HomeViewModel
@@ -43,7 +45,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
-                    text = "石取りゲームの説明",
+                    text = stringResource(R.string.rule_title_text),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -54,7 +56,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "ルール：プレイヤーは順番に石を取ります。1ターンで取れる石の数は1〜3個です。指定した数値を取ったプレイヤーが負けです。",
+                    text = stringResource(R.string.rule_text),
                     fontSize = 16.sp,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
@@ -71,7 +73,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "石取りゲーム",
+                    text = stringResource(R.string.game_title_text),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 24.dp)
@@ -87,10 +89,11 @@ fun HomeScreen(
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
-                        label = { Text("数値を選択") },
+                        label = { Text(stringResource(R.string.select_numerical_value_text)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true).fillMaxWidth()
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
+                            .fillMaxWidth()
                     )
 
                     ExposedDropdownMenu(
@@ -131,10 +134,12 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = { onStartGame(targetNumber, playerCount) },
+                    onClick = {
+                        onStartGame(targetNumber, playerCount)
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "ゲームスタート")
+                    Text(text = stringResource(R.string.start_game_button_text))
                 }
             }
         }
